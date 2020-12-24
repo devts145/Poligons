@@ -27,6 +27,52 @@ namespace Polygons
         }
         private void Form1_Paint(object sender, PaintEventArgs e)
         {
+            double k;
+            double b;
+            int upPoints;
+            if (Points.Count >= 3)
+            {
+                foreach (var i in Points)
+                {
+                    i.IsntInside = false;
+                }
+                for (int i = 0; i < Points.Count; i++)
+                {
+                    for (int j = i + 1; j < Points.Count; j++)
+                    {
+                        upPoints = 0;
+                        if (Points[i].X == Points[j].X)
+                        {
+                            for (int z = 0; z < Points.Count; z++)
+                            {
+                                if (z != i && z != j)
+                                {
+                                    if (Points[z].X > Points[i].X) upPoints++;
+                                }
+                            }
+                        }
+                        else
+                        {
+
+                            k = ((double)Points[i].Y - Points[j].Y) / (Points[i].X - Points[j].X);
+                            b = Points[i].Y - k * Points[i].X;
+                            for (int z = 0; z < Points.Count; z++)
+                            {
+                                if (z != i && z != j)
+                                {
+                                    if (Points[z].Y > k * Points[z].X + b) upPoints++;
+                                }
+                            }
+                        }
+                        if (upPoints == 0 || upPoints == Points.Count - 2)
+                        {
+                            e.Graphics.DrawLine(new Pen(Color.Red), Points[i].X, Points[i].Y, Points[j].X, Points[j].Y);
+                            Points[i].IsntInside = true;
+                            Points[j].IsntInside = true;
+                        }
+                    }
+                }
+            }
             foreach (var i in Points)
             {
                 i.Draw(e.Graphics);
@@ -46,7 +92,7 @@ namespace Polygons
                     isNotInside = false;
                     if ((e.Button & MouseButtons.Right) == 0)
                     {
-                        Points[j].Drag = true;
+                        Points[j].IsMoving = true;
                         Points[j].Deltax = Points[j].X - e.X;
                         Points[j].Deltay = Points[j].Y - e.Y;
                     }
@@ -59,9 +105,108 @@ namespace Polygons
             }
             if ((e.Button & MouseButtons.Right) == 0 && isNotInside)
             {
-                if (pointShape == PShape.C) Points.Add(new Circle(e.X, e.Y));
-                if (pointShape == PShape.S) Points.Add(new Square(e.X, e.Y));
-                if (pointShape == PShape.T) Points.Add(new Triangle(e.X, e.Y));
+                bool move = false;
+                if (Points.Count >= 3)
+                {
+                    List<Cosmic_body> Points2 = new List<Cosmic_body>(Points);
+                    Points2.Add(new Circle(e.X, e.Y));
+                    foreach (var i in Points2)
+                    {
+                        i.IsntInside = false;
+                    }
+                    Cosmic_body A = Points2[0];
+                    foreach (var i in Points2)
+                    {
+                        if (i.Y > A.Y)
+                            A = i;
+                        if (i.Y == A.Y)
+                            if (i.X < A.X)
+                                A = i;
+                    }
+                    Cosmic_body F = A;
+                    Cosmic_body M = new Circle(A.X - 10, A.Y);
+                    double minCos = 1;
+                    Cosmic_body P;
+                    if (Points2[0] == A)
+                    {
+                        P = Points2[1];
+                    }
+                    else
+                    {
+                        P = Points2[0];
+                    }
+                    double cos;
+                    foreach (var i in Points2)
+                    {
+                        if (i != A && i != M)
+                        {
+                            double aX = M.X - A.X;
+                            double bX = i.X - A.X;
+                            double aY = M.Y - A.Y;
+                            double bY = i.Y - A.Y;
+                            cos = (aX * bX + aY * bY) / (Math.Sqrt(aX * aX + aY * aY) * Math.Sqrt(bX * bX + bY * bY));
+                            if (cos < minCos)
+                            {
+                                minCos = cos;
+                                P = i;
+                            }
+                        }
+                    }
+                    M = A;
+                    A = P;
+                    while (P != F)
+                    {
+                        minCos = 1;
+                        if (Points2[0] == A)
+                            P = Points2[1];
+                        else
+                            P = Points2[0];
+                        foreach (var i in Points2)
+                        {
+                            if (i != A && i != M)
+                            {
+                                double aX = M.X - A.X;
+                                double bX = i.X - A.X;
+                                double aY = M.Y - A.Y;
+                                double bY = i.Y - A.Y;
+                                cos = (aX * bX + aY * bY) / (Math.Sqrt(aX * aX + aY * aY) * Math.Sqrt(bX * bX + bY * bY));
+                                if (cos < minCos)
+                                {
+                                    minCos = cos;
+                                    P = i;
+                                }
+                            }
+                        }
+                        A.IsntInside = true;
+                        P.IsntInside = true;
+                        M = A;
+                        A = P;
+                    }
+                    for (int i = 0; i < Points2.Count; ++i)
+                    {
+                        if (!Points2[i].IsntInside)
+                        {
+                            Points2.RemoveAt(i);
+                            --i;
+                        }
+                    }
+                    move = Points.SequenceEqual(Points2);
+                    if (move)
+                    {
+                        for (int j = 0; j < Points.Count(); ++j)
+                        {
+                            Points[j].IsMoving = true;
+                            Points[j].Deltax = Points[j].X - e.X;
+                            Points[j].Deltay = Points[j].Y - e.Y;
+                        }
+                    }
+                }
+                if (!move)
+                {
+                    if (pointShape == PShape.C) Points.Add(new Circle(e.X, e.Y));
+                    if (pointShape == PShape.S) Points.Add(new Square(e.X, e.Y));
+                    if (pointShape == PShape.T) Points.Add(new Triangle(e.X, e.Y));
+                }
             }
             this.Invalidate();
         }
@@ -86,6 +231,14 @@ namespace Polygons
                 i.Drag = false;
                 i.Deltax = 0;
                 i.Deltay = 0;
+            }
+            for (int i = 0; i < Points.Count; ++i)
+            {
+                if (!Points[i].IsntInside)
+                {
+                    Points.RemoveAt(i);
+                    --i;
+                }
             }
         }
 

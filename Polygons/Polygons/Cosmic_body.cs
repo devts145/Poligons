@@ -12,7 +12,7 @@ namespace Polygons
         protected static int R;
         protected static Color Color;
         protected int x, y, deltax, deltay;
-        protected bool isMoving;
+        protected bool isMoving, isntInside;
         public Cosmic_body(int x, int y)
         {
             this.x = x;
@@ -20,12 +20,15 @@ namespace Polygons
             deltax = 0;
             deltay = 0;
             isMoving = false;
+            isntInside = true;
         }
         static Cosmic_body()
         {
             R = 50;
             Color = Color.Green;
         }
+        public abstract void Draw(Graphics graphics);
+        public abstract bool CheckIsInside(int x1, int y1);
         public bool Drag
         {
             get { return isMoving; }
@@ -51,7 +54,27 @@ namespace Polygons
             get { return deltay; }
             set { deltay = value; }
         }
-        public abstract void Draw(Graphics graphics);
-        public abstract bool CheckIsInside(int x1, int y1);
+        public bool IsntInside
+        {
+            get
+            {
+                return isntInside;
+            }
+            set
+            {
+                isntInside = value;
+            }
+        }
+        public bool IsMoving
+        {
+            get
+            {
+                return isMoving;
+            }
+            set
+            {
+                isMoving = value;
+            }
+        }
     }
 }
