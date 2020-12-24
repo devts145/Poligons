@@ -17,3 +17,13 @@ C:\Users\Tsekv\Desktop\Polygons-master\Polygons\obj\Debug\Polygons.csproj.Genera
 C:\Users\Tsekv\Desktop\Polygons-master\Polygons\obj\Debug\Polygons.csproj.CoreCompileInputs.cache
 C:\Users\Tsekv\Desktop\Polygons-master\Polygons\obj\Debug\Polygons.exe
 C:\Users\Tsekv\Desktop\Polygons-master\Polygons\obj\Debug\Polygons.pdb
+C:\Users\Tsekv\Documents\GitHub\Poligons\Polygons\Polygons\bin\Debug\Polygons.exe.config
+C:\Users\Tsekv\Documents\GitHub\Poligons\Polygons\Polygons\bin\Debug\Polygons.exe
+C:\Users\Tsekv\Documents\GitHub\Poligons\Polygons\Polygons\bin\Debug\Polygons.pdb
+C:\Users\Tsekv\Documents\GitHub\Poligons\Polygons\Polygons\obj\Debug\Polygons.csprojAssemblyReference.cache
+C:\Users\Tsekv\Documents\GitHub\Poligons\Polygons\Polygons\obj\Debug\Polygons.Form1.resources
+C:\Users\Tsekv\Documents\GitHub\Poligons\Polygons\Polygons\obj\Debug\Polygons.Properties.Resources.resources
+C:\Users\Tsekv\Documents\GitHub\Poligons\Polygons\Polygons\obj\Debug\Polygons.csproj.GenerateResource.cache
+C:\Users\Tsekv\Documents\GitHub\Poligons\Polygons\Polygons\obj\Debug\Polygons.csproj.CoreCompileInputs.cache
+C:\Users\Tsekv\Documents\GitHub\Poligons\Polygons\Polygons\obj\Debug\Polygons.exe
+C:\Users\Tsekv\Documents\GitHub\Poligons\Polygons\Polygons\obj\Debug\Polygons.pdb
